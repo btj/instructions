@@ -1,6 +1,8 @@
 package instructions;
 
-abstract class Instruction {}
+abstract class Instruction {
+	abstract void execute(Machine machine);
+}
 
 class LoadConstantInstruction extends Instruction {
 	int registerIndex;
@@ -11,7 +13,7 @@ class LoadConstantInstruction extends Instruction {
 		this.constantValue = constantValue;
 	}
 	
-	void execute(Machine machine) {
+	void execute(Machine machine) { // deze methode overschrijft de methode 'execute' in klasse Instruction (Eng.: overrides)
 		machine.registers[registerIndex] = constantValue;
 		machine.pc++;
 	}
@@ -94,26 +96,7 @@ class Machine {
 	void run() {
 		while (!stop) {
 			Instruction instruction = instructions[pc];
-			if (instruction instanceof LoadConstantInstruction) {
-				LoadConstantInstruction lci = (LoadConstantInstruction)instruction;
-				lci.execute(this);
-			} else if (instruction instanceof DecrementInstruction) {
-				DecrementInstruction di = (DecrementInstruction)instruction;
-				di.execute(this);
-			} else if (instruction instanceof MultiplyInstruction) {
-				MultiplyInstruction mi = (MultiplyInstruction)instruction;
-				mi.execute(this);
-			} else if (instruction instanceof JumpIfZeroInstruction) {
-				JumpIfZeroInstruction jizi = (JumpIfZeroInstruction)instruction;
-				jizi.execute(this);
-			} else if (instruction instanceof JumpInstruction) {
-				JumpInstruction ji = (JumpInstruction)instruction;
-				pc = ji.instructionIndex;
-			} else if (instruction instanceof HaltInstruction) {
-				HaltInstruction hi = (HaltInstruction)instruction;
-				hi.execute(this);
-			} else
-				throw new AssertionError();
+			instruction.execute(this); // dynamic binding
 		}
 	}
 	
