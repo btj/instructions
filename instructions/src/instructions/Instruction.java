@@ -51,8 +51,16 @@ class MultiplyInstruction extends Instruction {
 class HaltInstruction extends Instruction {}
 
 class Machine {
-	static void execute(int[] registers, Instruction[] instructions) {
-		int pc = 0; // program counter
+	int pc;
+	int[] registers;
+	Instruction[] instructions;
+	
+	Machine(int[] registers, Instruction[] instructions) {
+		this.registers = registers;
+		this.instructions = instructions;
+	}
+	
+	void run() {
 		for (;;) {
 			Instruction instruction = instructions[pc];
 			if (instruction instanceof LoadConstantInstruction) {
@@ -81,5 +89,10 @@ class Machine {
 			} else
 				throw new AssertionError();
 		}
+	}
+	
+	
+	static void execute(int[] registers, Instruction[] instructions) {
+		new Machine(registers, instructions).run();
 	}
 }
